@@ -203,8 +203,14 @@
 
 <script>
 (() => {
-  // ใส่ URL ของ Apps Script Web App ตรงนี้ (ลงท้ายด้วย /exec)
-  const SAVE_URL = "";
+  // Supabase (publishable key — safe in the browser; RLS lets visitors only insert, never read wishes)
+  const SB_URL = "https://agncwlvtxaiatbynwnms.supabase.co";
+  const SB_KEY = "sb_publishable_eDcbffTfCDQgKSagZDhH5g__2pCMOk5";
+  const sb = (path, body, extra = {}) => fetch(SB_URL + "/rest/v1/" + path, {
+    method: "POST",
+    headers: {"apikey": SB_KEY, "Content-Type": "application/json", ...extra},
+    body: JSON.stringify(body)
+  });
   const RIVER = document.body.dataset.mode === "river";
   const SITE = "nyx-develop.github.io/loykrathong";
 
@@ -365,9 +371,9 @@
   let others = [], otherIdx = 0;
   const totalEl = document.getElementById("total");
   async function loadOthers() {
-    if (!SAVE_URL) return;
     try {
-      const r = await fetch(SAVE_URL + (RIVER ? "?all=1" : "?list=1"));
+      const r = await sb("rpc/krathong_feed", {lim: RIVER ? 5000 : 60});
+      if (!r.ok) return;
       const j = await r.json();
       if (Array.isArray(j.items)) others = j.items.filter(it => it && it.name).slice(0, RIVER ? 5000 : 60);
       if (typeof j.total === "number") { totalEl.textContent = j.total.toLocaleString("th-TH"); totalEl.parentElement.style.display = ""; }
@@ -419,12 +425,8 @@
 
   // ---------- saving wishes → Google Sheet (Apps Script Web App) ----------
   function saveWish(entry) {
-    if (!SAVE_URL) return Promise.resolve(false);
-    return fetch(SAVE_URL, {
-      method: "POST", mode: "no-cors",
-      headers: {"Content-Type": "text/plain;charset=utf-8"},
-      body: JSON.stringify(entry)
-    }).then(() => true).catch(() => false);
+    return sb("wishes", {name: entry.name, wish: entry.wish, type: entry.type}, {"Prefer": "return=minimal"})
+      .then(r => r.ok).catch(() => false);
   }
 
   panel.addEventListener("submit", (e) => {
