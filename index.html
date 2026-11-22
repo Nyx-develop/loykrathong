@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ลอยกระทงออนไลน์แบบรักษ์โลก เลือกกระทงใบตอง ขนมปัง ผักตบชวา หรือกะลา ใส่ชื่อและคำอธิษฐาน ไม่มีขยะสักชิ้น">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nyx-develop.github.io/loykrathong/">
+<meta property="og:title" content="ลอยกระทงออนไลน์ · กระทงรักษ์โลก 🪷">
+<meta property="og:description" content="มาลอยกระทงด้วยกัน ใส่ชื่อ อธิษฐาน แล้วปล่อยกระทงลอยไปกับสายน้ำ ไม่มีขยะสักชิ้น">
+<meta property="og:image" content="https://nyx-develop.github.io/loykrathong/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <title>ลอยกระทงออนไลน์ · รักษ์โลก</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +32,7 @@
     box-shadow:0 0 40px 12px rgba(255,236,170,.35),0 0 120px 50px rgba(255,220,140,.15)}
   .moon::after{content:"";position:absolute;inset:0;border-radius:50%;
     background:radial-gradient(circle at 62% 58%,rgba(200,170,110,.25) 0 9%,transparent 10%),radial-gradient(circle at 40% 68%,rgba(200,170,110,.2) 0 6%,transparent 7%),radial-gradient(circle at 66% 30%,rgba(200,170,110,.18) 0 5%,transparent 6%)}
-  .treeline{position:absolute;left:0;right:0;bottom:42%;height:70px}
+  .treeline{position:absolute;left:0;right:0;width:100%;bottom:42%;height:70px}
   .river{position:absolute;left:0;right:0;bottom:0;height:42%;
     background:linear-gradient(180deg,#0d1a45 0%,#0a1438 40%,#050a22 100%)}
   .reflect{position:absolute;top:0;right:calc(12% + min(11vw,60px) - 30px);width:60px;height:100%;
@@ -46,6 +54,11 @@
   @keyframes glow{0%,100%{opacity:.75}50%{opacity:1}}
   .kt .tag{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);white-space:nowrap;font:500 13px "Mitr",sans-serif;
     padding:3px 10px;border-radius:99px;background:rgba(10,16,50,.7);border:1px solid rgba(255,210,122,.5);color:var(--gold)}
+  .kt .tag.other{color:#e8e4ff;border-color:rgba(200,190,255,.35);background:rgba(10,16,50,.55);font-weight:400}
+  .share{display:flex;gap:8px;margin-top:10px}
+  .share a,.share button{flex:1;text-align:center;text-decoration:none;border-radius:12px;padding:9px 6px;font:500 14px "Mitr",sans-serif;cursor:pointer;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--ink)}
+  .share .line{background:#06c755;border-color:#06c755;color:#fff}
+  .share .fb{background:#1877f2;border-color:#1877f2;color:#fff}
   .flame{transform-origin:60px 30px;animation:flick .18s ease-in-out infinite alternate}
   @keyframes flick{from{transform:scale(1,1) skewX(-2deg)}to{transform:scale(.92,1.08) skewX(3deg)}}
   .fish{position:absolute;width:26px;height:14px;pointer-events:none;animation:jump 1.3s ease-in-out forwards}
@@ -105,8 +118,8 @@
   <div class="sky" id="sky"></div>
   <div class="moon"></div>
   <svg class="treeline" viewBox="0 0 1000 70" preserveAspectRatio="none" aria-hidden="true">
-    <path fill="#050817" d="M0 70V48c30-10 50-22 80-14s40-20 70-18 30 16 60 12 40-26 80-22 30 20 60 18 50-14 80-10 20-30 60-30 30 26 70 24 40-12 70-8 60-18 90-12 40 20 80 16 50-10 80-6 40 8 70 4V70z"/>
-    <path fill="#050817" d="M640 40l14-30 14 30zm6-6h16l-8-14zM655 12v-10" stroke="#050817" stroke-width="2"/>
+    <path fill="#050817" d="M0 70V46C60 30 120 40 180 34S300 22 360 30S480 44 540 36S660 20 720 28S840 40 900 32S980 30 1000 36V70Z"/>
+    <path fill="#050817" d="M628 30L644 6L660 30Z"/>
   </svg>
   <div class="river" id="river">
     <div class="reflect"></div>
@@ -119,6 +132,7 @@
   <p>กระทงรักษ์โลก · สายน้ำสะอาด ใจก็สะอาด</p>
   <div class="stats">
     <span class="chip">คุณลอยแล้ว <span id="mine">0</span> กระทง</span>
+    <span class="chip" style="display:none">ลอยแล้วทั้งหมด <span id="total">0</span> กระทง</span>
     <span class="chip">ขยะในแม่น้ำ <b>0 ชิ้น</b> 🌏</span>
   </div>
 </header>
@@ -131,6 +145,11 @@
   <textarea id="wish" maxlength="120" required placeholder="คำอธิษฐาน เช่น ขอให้ครอบครัวสุขภาพแข็งแรง"></textarea>
   <button class="go" type="submit">ลอยกระทง 🪷</button>
   <div class="tips">ลอยจริงก็รักษ์โลกได้ · ใช้วัสดุธรรมชาติ ไม่ใช้โฟม ไม่ใช้ลวดหรือแม็กเย็บ · ลอยรวมกันครอบครัวละใบ</div>
+  <div class="share">
+    <a class="line" id="lineShare" href="#" target="_blank" rel="noopener">แชร์ LINE</a>
+    <a class="fb" id="fbShare" href="#" target="_blank" rel="noopener">Facebook</a>
+    <button type="button" id="copyShare">🔗 แชร์ลิงก์</button>
+  </div>
 </form>
 <button id="again" type="button">ลอยอีกใบ 🪷</button>
 
@@ -138,6 +157,9 @@
 
 <script>
 (() => {
+  // ใส่ URL ของ Apps Script Web App ตรงนี้ (ลงท้ายด้วย /exec)
+  const SAVE_URL = "";
+
   // ---------- krathong artwork (inline SVG, viewBox 0 0 120 100) ----------
   const candle = () => `
     <line x1="48" y1="50" x2="44" y2="26" stroke="#8a5a3c" stroke-width="1.4"/>
@@ -247,11 +269,11 @@
   let W = innerWidth, H = innerHeight;
   addEventListener("resize", () => { W = innerWidth; H = innerHeight; });
 
-  function spawn(type, {name = "", depth = Math.random(), x = -140} = {}) {
+  function spawn(type, {name = "", depth = Math.random(), x = -140, other = false} = {}) {
     const el = document.createElement("div");
     el.className = "kt";
     el.innerHTML = `<div class="ripple"></div><div class="glow"></div>${svg(type)}${name ? `<div class="tag"></div>` : ""}`;
-    if (name) el.querySelector(".tag").textContent = name;
+    if (name) { const tg = el.querySelector(".tag"); tg.textContent = name; if (other) tg.classList.add("other"); }
     layer.appendChild(el);
     const scale = .38 + depth * .82;
     const it = {el, type, x, depth, scale, speed: 10 + depth * 22, phase: Math.random()*6.28, mine: !!name, born: performance.now(), fed: 0};
@@ -290,13 +312,53 @@
   }
   requestAnimationFrame(tick);
 
-  // ambient krathongs from the river
+  // ---------- other people's krathongs (names only — wishes stay private) ----------
   const ids = TYPES.map(t => t.id);
+  let others = [], otherIdx = 0;
+  const totalEl = document.getElementById("total");
+  async function loadOthers() {
+    if (!SAVE_URL) return;
+    try {
+      const r = await fetch(SAVE_URL + "?list=1");
+      const j = await r.json();
+      if (Array.isArray(j.items)) others = j.items.filter(it => it && it.name).slice(0, 60);
+      if (typeof j.total === "number") { totalEl.textContent = j.total.toLocaleString("th-TH"); totalEl.parentElement.style.display = ""; }
+    } catch (e) {}
+  }
+  loadOthers();
+  setInterval(loadOthers, 60000);
+
+  function spawnOther(opts = {}) {
+    if (others.length) {
+      const it = others[otherIdx++ % others.length];
+      return spawn(ids.includes(it.type) ? it.type : "leaf", {name: String(it.name).slice(0, 24), other: true, ...opts});
+    }
+    return spawn(ids[Math.floor(Math.random()*4)], opts);
+  }
   for (let i = 0; i < 5; i++) spawn(ids[i % 4], {depth: Math.random() * .6, x: Math.random() * W});
+  setTimeout(() => { for (let i = 0; i < 3; i++) if (others.length) spawnOther({depth: .2 + Math.random() * .5, x: Math.random() * W * .8}); }, 2500);
   setInterval(() => {
-    if (document.hidden || items.length > 22) return;
-    spawn(ids[Math.floor(Math.random()*4)], {depth: Math.random() * .65});
-  }, 4200);
+    if (document.hidden || items.length > 24) return;
+    spawnOther({depth: Math.random() * .7});
+  }, 3600);
+
+  // ---------- share ----------
+  const SHARE_URL = location.href.split("#")[0];
+  const SHARE_TEXT = "มาลอยกระทงออนไลน์แบบรักษ์โลกกัน 🪷🌕 ไม่มีขยะสักชิ้น";
+  document.getElementById("lineShare").href = "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(SHARE_URL);
+  document.getElementById("fbShare").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SHARE_URL);
+  document.getElementById("copyShare").onclick = async () => {
+    try {
+      if (navigator.share) { await navigator.share({title: document.title, text: SHARE_TEXT, url: SHARE_URL}); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(SHARE_URL); flash("คัดลอกลิงก์แล้ว ส่งให้เพื่อนได้เลย 🔗"); }
+    catch (e) { flash(SHARE_URL); }
+  };
+  function flash(msg) {
+    tw.textContent = "แชร์ให้เพื่อน"; ts.textContent = msg;
+    toast.classList.add("show"); clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+  }
 
   // ---------- launch ----------
   const panel = document.getElementById("panel"), again = document.getElementById("again");
@@ -304,8 +366,6 @@
   let toastTimer;
 
   // ---------- saving wishes → Google Sheet (Apps Script Web App) ----------
-  // ใส่ URL ของ Apps Script Web App ตรงนี้ (ลงท้ายด้วย /exec)
-  const SAVE_URL = "";
   function saveWish(entry) {
     if (!SAVE_URL) return Promise.resolve(false);
     return fetch(SAVE_URL, {
@@ -320,6 +380,7 @@
     const name = document.getElementById("name").value.trim() || "กระทงของฉัน";
     const wish = document.getElementById("wish").value.trim();
     const saving = saveWish({name, wish, type: picked, t: Date.now()});
+    others.unshift({name, type: picked});
     spawn(picked, {name, depth: .78 + Math.random() * .2, x: Math.max(10, W * .12)});
     mine++; mineEl.textContent = mine;
     try { localStorage.setItem("lk-mine", mine); } catch (e) {}
