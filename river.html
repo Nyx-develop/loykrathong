@@ -323,14 +323,14 @@
   let W = innerWidth, H = innerHeight;
   addEventListener("resize", () => { W = innerWidth; H = innerHeight; });
 
-  function spawn(type, {name = "", depth = Math.random(), x = -140, other = false} = {}) {
+  function spawn(type, {name = "", depth = Math.random(), x = -140, other = false, key = ""} = {}) {
     const el = document.createElement("div");
     el.className = "kt";
     el.innerHTML = `<div class="ripple"></div><div class="glow"></div>${svg(type)}${name ? `<div class="tag"></div>` : ""}`;
     if (name) { const tg = el.querySelector(".tag"); tg.textContent = name; if (other) tg.classList.add("other"); tg.style.transform = `translateX(-50%) scale(${Math.min(2.2, Math.max(1, .95 / (.38 + depth * .82)))})`; tg.style.transformOrigin = "50% 100%"; }
     layer.appendChild(el);
     const scale = .38 + depth * .82;
-    const it = {el, type, x, depth, scale, speed: 10 + depth * 22, phase: Math.random()*6.28, mine: !!name, born: performance.now(), fed: 0};
+    const it = {el, type, key, name, x, depth, scale, speed: 10 + depth * 22, phase: Math.random()*6.28, mine: !!name, born: performance.now(), fed: 0};
     el.style.zIndex = Math.round(depth * 100);
     items.push(it);
     return it;
@@ -367,37 +367,46 @@
   requestAnimationFrame(tick);
 
   // ---------- other people's krathongs (names only — wishes stay private) ----------
+  // Rule: one krathong per person on screen at a time, picked at random.
+  // When everyone is already floating (or nobody has wished yet) → a plain krathong with no name.
   const ids = TYPES.map(t => t.id);
-  let others = [], otherIdx = 0;
+  const randType = () => ids[Math.floor(Math.random() * ids.length)];
+  let others = [], loaded = false;
   const totalEl = document.getElementById("total");
   async function loadOthers() {
     try {
       const r = await sb("rpc/krathong_feed", {lim: RIVER ? 5000 : 60});
       if (!r.ok) return;
       const j = await r.json();
-      if (Array.isArray(j.items)) others = j.items.filter(it => it && it.name).slice(0, RIVER ? 5000 : 60);
+      if (Array.isArray(j.items)) others = j.items.filter(it => it && it.name && it.id != null);
       if (typeof j.total === "number") { totalEl.textContent = j.total.toLocaleString("th-TH"); totalEl.parentElement.style.display = ""; }
+      loaded = true;
     } catch (e) {}
   }
   const firstLoad = loadOthers();
   setInterval(loadOthers, 60000);
   if (RIVER) firstLoad.then(() => { if (!others.length) document.getElementById("emptyNote").style.display = "block"; });
 
+  const personKey = (name, type) => String(name).trim() + "|" + type;
   function spawnOther(opts = {}) {
-    if (others.length) {
-      const it = others[otherIdx++ % others.length];
-      return spawn(ids.includes(it.type) ? it.type : "leaf", {name: String(it.name).slice(0, 24), other: true, ...opts});
+    const floating = new Set(items.map(i => i.key).filter(Boolean));
+    const free = others.filter(o => !floating.has("id:" + o.id) && !floating.has(personKey(o.name, o.type)));
+    if (free.length) {
+      const o = free[Math.floor(Math.random() * free.length)];
+      return spawn(ids.includes(o.type) ? o.type : "leaf", {name: String(o.name).slice(0, 24), other: true, key: "id:" + o.id, ...opts});
     }
-    return spawn(ids[Math.floor(Math.random()*4)], opts);
+    return spawn(randType(), opts);
   }
-  if (!RIVER) for (let i = 0; i < 5; i++) spawn(ids[i % 4], {depth: Math.random() * .6, x: Math.random() * W});
-  if (RIVER) firstLoad.then(() => { for (let i = 0; i < Math.min(8, others.length); i++) spawnOther({depth: Math.random(), x: Math.random() * W * .9}); });
-  setTimeout(() => { for (let i = 0; i < 3; i++) if (others.length) spawnOther({depth: .2 + Math.random() * .5, x: Math.random() * W * .8}); }, 2500);
+  // opening scene: a few krathongs already on the water
+  firstLoad.then(() => {
+    const n = RIVER ? Math.max(5, Math.min(8, others.length)) : 5;
+    for (let i = 0; i < n; i++) spawnOther({depth: RIVER ? Math.random() : Math.random() * .7, x: Math.random() * W * .9});
+  });
   setInterval(() => {
-    if (document.hidden || items.length > (RIVER ? 34 : 24)) return;
-    if (RIVER && !others.length) return;
+    if (document.hidden) return;
+    if (items.length > (RIVER ? 30 : 22)) return;
     spawnOther({depth: RIVER ? Math.random() : Math.random() * .7});
-  }, RIVER ? 1300 : 3600);
+  }, RIVER ? 1800 : 3600);
 
   // ---------- share ----------
   const SHARE_URL = location.href.split("#")[0];
@@ -434,15 +443,16 @@
     const name = document.getElementById("name").value.trim() || "กระทงของฉัน";
     const wish = document.getElementById("wish").value.trim();
     const saving = saveWish({name, wish, type: picked, t: Date.now()});
-    others.unshift({name, type: picked});
-    spawn(picked, {name, depth: .78 + Math.random() * .2, x: Math.max(10, W * .12)});
+    // same person already drifting by? let that one go so there's only one krathong per person
+    for (let i = items.length - 1; i >= 0; i--) if (items[i].name && items[i].name.trim() === name) { items[i].el.remove(); items.splice(i, 1); }
+    spawn(picked, {name, key: personKey(name, picked), depth: .78 + Math.random() * .2, x: Math.max(10, W * .12)});
     mine++; mineEl.textContent = mine;
     try { localStorage.setItem("lk-mine", mine); } catch (e) {}
 
     tw.textContent = wish ? "ขอให้ " + wish.replace(/^ขอให้\s*/, "") : "ขอให้สมหวังทุกประการ 🙏";
     const fact = TYPES.find(t => t.id === picked).fact;
     ts.textContent = fact;
-    saving.then(ok => { if (ok) ts.textContent = "✓ บันทึกคำอธิษฐานแล้ว · " + fact; });
+    saving.then(ok => { if (ok) { ts.textContent = "✓ บันทึกคำอธิษฐานแล้ว · " + fact; loadOthers(); } });
     toast.classList.add("show");
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toast.classList.remove("show"), 4200);
