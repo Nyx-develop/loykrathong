@@ -33,13 +33,15 @@ function doPost(e) {
   }
 }
 
-// ส่งให้หน้าเว็บแค่ชื่อ + แบบกระทง 60 ใบล่าสุด (คำอธิษฐานไม่ถูกส่งออกไป)
-function doGet() {
+// ส่งให้หน้าเว็บแค่ชื่อ + แบบกระทง (คำอธิษฐานไม่ถูกส่งออกไป)
+// ?list=1 → 60 ใบล่าสุด (หน้าแรก) | ?all=1 → ทุกคน สูงสุด 5000 (หน้าสายน้ำ)
+function doGet(e) {
+  const limit = (e && e.parameter && e.parameter.all) ? 5000 : 60;
   const sh = sheet_(false);
   const total = sh ? Math.max(0, sh.getLastRow() - 1) : 0;
   let items = [];
   if (total > 0) {
-    const n = Math.min(60, total);
+    const n = Math.min(limit, total);
     const rev = {};
     Object.keys(TYPES).forEach(k => rev[TYPES[k]] = k);
     items = sh.getRange(sh.getLastRow() - n + 1, 2, n, 3).getValues().reverse()

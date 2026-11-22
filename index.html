@@ -89,7 +89,32 @@
   .go{margin-top:10px;width:100%;border:0;border-radius:14px;padding:12px;font:500 17px "Mitr",sans-serif;cursor:pointer;color:#2a1600;
     background:linear-gradient(180deg,#ffe29a,#ffb347);box-shadow:0 4px 18px rgba(255,170,70,.35)}
   .go:active{transform:scale(.98)}
-  #again{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);border:1px solid rgba(255,210,122,.6);background:rgba(8,13,42,.8);color:var(--gold);
+  #after{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:none;gap:10px;z-index:250}
+  #after button,.pill{border:1px solid rgba(255,210,122,.6);background:rgba(8,13,42,.8);color:var(--gold);font:500 15px "Mitr",sans-serif;padding:10px 18px;border-radius:99px;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
+  #after .hot,.pill.hot{background:linear-gradient(180deg,#ffe29a,#ffb347);color:#2a1600;border-color:transparent}
+  header a.pill{pointer-events:auto;font-size:13px;padding:5px 12px;margin-top:8px}
+  .modal{position:fixed;inset:0;z-index:500;background:rgba(3,6,20,.78);display:none;align-items:center;justify-content:center;padding:12px}
+  .modal.open{display:flex}
+  .modal .card{width:min(440px,100%);max-height:96vh;overflow:auto;background:#0b1236;border:1px solid rgba(255,210,122,.35);border-radius:18px;padding:12px 14px 16px}
+  .modal .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .modal .hd h3{font:700 24px "Charm",serif;color:var(--gold)}
+  .modal .x{background:none;border:0;color:var(--muted);font-size:26px;cursor:pointer;line-height:1}
+  .stage{position:relative;margin:8px auto;height:min(52vh,460px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#060b24}
+  .stage canvas,.stage video{position:absolute;inset:0;width:100%;height:100%}
+  .chk{display:flex;align-items:center;gap:8px;font:400 14px "Mitr",sans-serif;color:var(--ink);justify-content:center}
+  .chk input{width:18px;height:18px;accent-color:#ffb347}
+  #clipStatus{text-align:center;font-size:13px;color:#cfe8c2;min-height:20px;margin:4px 0}
+  .btns{display:flex;gap:8px}
+  .btns button{flex:1;border-radius:12px;padding:11px 6px;font:500 15px "Mitr",sans-serif;cursor:pointer;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--ink)}
+  .btns button.hot{background:linear-gradient(180deg,#ffe29a,#ffb347);color:#2a1600;border-color:transparent}
+  .btns button:disabled{opacity:.5}
+  body[data-mode="river"] #panel,body[data-mode="river"] .mine-chip{display:none}
+  .river-only{display:none}
+  body[data-mode="river"] .river-only{display:inline-block}
+  body[data-mode="river"] .main-only{display:none}
+  #emptyNote{position:fixed;left:50%;top:62%;transform:translateX(-50%);text-align:center;font:400 15px "Mitr",sans-serif;color:var(--muted);display:none;width:90%}
+  #riverCta{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:250}
+  #again{border:1px solid rgba(255,210,122,.6);background:rgba(8,13,42,.8);color:var(--gold);
     font:500 15px "Mitr",sans-serif;padding:10px 22px;border-radius:99px;cursor:pointer;display:none}
   #toast{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%) scale(.9);width:min(420px,calc(100% - 40px));text-align:center;
     background:rgba(8,13,42,.88);border:1px solid rgba(255,210,122,.4);border-radius:18px;padding:16px 18px;opacity:0;pointer-events:none;transition:.4s}
@@ -129,12 +154,14 @@
 
 <header>
   <h1>ลอยกระทงออนไลน์</h1>
-  <p>กระทงรักษ์โลก · สายน้ำสะอาด ใจก็สะอาด</p>
+  <p class="main-only">กระทงรักษ์โลก · สายน้ำสะอาด ใจก็สะอาด</p>
+  <p class="river-only">สายน้ำแห่งคำอธิษฐาน · ทุกคนที่มาลอยกระทง</p>
   <div class="stats">
-    <span class="chip">คุณลอยแล้ว <span id="mine">0</span> กระทง</span>
+    <span class="chip mine-chip">คุณลอยแล้ว <span id="mine">0</span> กระทง</span>
     <span class="chip" style="display:none">ลอยแล้วทั้งหมด <span id="total">0</span> กระทง</span>
     <span class="chip">ขยะในแม่น้ำ <b>0 ชิ้น</b> 🌏</span>
   </div>
+  <div><a class="pill main-only" href="river.html">🌊 ดูกระทงของทุกคน</a></div>
 </header>
 
 <form id="panel" autocomplete="off">
@@ -151,7 +178,26 @@
     <button type="button" id="copyShare">🔗 แชร์ลิงก์</button>
   </div>
 </form>
-<button id="again" type="button">ลอยอีกใบ 🪷</button>
+<div id="after">
+  <button id="again" type="button">ลอยอีกใบ 🪷</button>
+  <button id="clipBtn" class="hot" type="button">🎬 ทำคลิปไว้แชร์</button>
+</div>
+<div id="emptyNote">ยังไม่มีกระทงในสายน้ำ<br>มาเป็นคนแรกที่ลอยกระทงกัน 🪷</div>
+<a id="riverCta" class="pill hot river-only" href="./">🪷 ลอยกระทงของคุณ</a>
+
+<div id="clip" class="modal" role="dialog" aria-modal="true">
+  <div class="card">
+    <div class="hd"><h3>คลิปลอยกระทงของคุณ</h3><button class="x" id="clipX" type="button" aria-label="ปิด">×</button></div>
+    <label class="chk"><input type="checkbox" id="clipWish" checked> ใส่คำอธิษฐานในคลิป</label>
+    <div class="stage"><canvas id="clipCanvas" width="720" height="1280"></canvas><video id="clipVideo" playsinline muted loop controls hidden></video></div>
+    <div id="clipStatus">คลิปแนวตั้งยาว 7 วินาที เหมาะกับสตอรี่ / TikTok / Reels</div>
+    <div class="btns">
+      <button id="clipMake" class="hot" type="button">สร้างคลิป</button>
+      <button id="clipShare" class="hot" type="button" hidden>แชร์คลิป</button>
+      <button id="clipSave" type="button" hidden>บันทึกคลิป</button>
+    </div>
+  </div>
+</div>
 
 <div id="toast"><div class="wish" id="toastWish"></div><div class="sub" id="toastSub"></div></div>
 
@@ -159,6 +205,8 @@
 (() => {
   // ใส่ URL ของ Apps Script Web App ตรงนี้ (ลงท้ายด้วย /exec)
   const SAVE_URL = "";
+  const RIVER = document.body.dataset.mode === "river";
+  const SITE = "nyx-develop.github.io/loykrathong";
 
   // ---------- krathong artwork (inline SVG, viewBox 0 0 120 100) ----------
   const candle = () => `
@@ -273,7 +321,7 @@
     const el = document.createElement("div");
     el.className = "kt";
     el.innerHTML = `<div class="ripple"></div><div class="glow"></div>${svg(type)}${name ? `<div class="tag"></div>` : ""}`;
-    if (name) { const tg = el.querySelector(".tag"); tg.textContent = name; if (other) tg.classList.add("other"); }
+    if (name) { const tg = el.querySelector(".tag"); tg.textContent = name; if (other) tg.classList.add("other"); tg.style.transform = `translateX(-50%) scale(${Math.min(2.2, Math.max(1, .95 / (.38 + depth * .82)))})`; tg.style.transformOrigin = "50% 100%"; }
     layer.appendChild(el);
     const scale = .38 + depth * .82;
     const it = {el, type, x, depth, scale, speed: 10 + depth * 22, phase: Math.random()*6.28, mine: !!name, born: performance.now(), fed: 0};
@@ -319,14 +367,15 @@
   async function loadOthers() {
     if (!SAVE_URL) return;
     try {
-      const r = await fetch(SAVE_URL + "?list=1");
+      const r = await fetch(SAVE_URL + (RIVER ? "?all=1" : "?list=1"));
       const j = await r.json();
-      if (Array.isArray(j.items)) others = j.items.filter(it => it && it.name).slice(0, 60);
+      if (Array.isArray(j.items)) others = j.items.filter(it => it && it.name).slice(0, RIVER ? 5000 : 60);
       if (typeof j.total === "number") { totalEl.textContent = j.total.toLocaleString("th-TH"); totalEl.parentElement.style.display = ""; }
     } catch (e) {}
   }
-  loadOthers();
+  const firstLoad = loadOthers();
   setInterval(loadOthers, 60000);
+  if (RIVER) firstLoad.then(() => { if (!others.length) document.getElementById("emptyNote").style.display = "block"; });
 
   function spawnOther(opts = {}) {
     if (others.length) {
@@ -335,12 +384,14 @@
     }
     return spawn(ids[Math.floor(Math.random()*4)], opts);
   }
-  for (let i = 0; i < 5; i++) spawn(ids[i % 4], {depth: Math.random() * .6, x: Math.random() * W});
+  if (!RIVER) for (let i = 0; i < 5; i++) spawn(ids[i % 4], {depth: Math.random() * .6, x: Math.random() * W});
+  if (RIVER) firstLoad.then(() => { for (let i = 0; i < Math.min(8, others.length); i++) spawnOther({depth: Math.random(), x: Math.random() * W * .9}); });
   setTimeout(() => { for (let i = 0; i < 3; i++) if (others.length) spawnOther({depth: .2 + Math.random() * .5, x: Math.random() * W * .8}); }, 2500);
   setInterval(() => {
-    if (document.hidden || items.length > 24) return;
-    spawnOther({depth: Math.random() * .7});
-  }, 3600);
+    if (document.hidden || items.length > (RIVER ? 34 : 24)) return;
+    if (RIVER && !others.length) return;
+    spawnOther({depth: RIVER ? Math.random() : Math.random() * .7});
+  }, RIVER ? 1300 : 3600);
 
   // ---------- share ----------
   const SHARE_URL = location.href.split("#")[0];
@@ -361,7 +412,8 @@
   }
 
   // ---------- launch ----------
-  const panel = document.getElementById("panel"), again = document.getElementById("again");
+  const panel = document.getElementById("panel"), again = document.getElementById("again"), after = document.getElementById("after");
+  let lastEntry = null;
   const toast = document.getElementById("toast"), tw = document.getElementById("toastWish"), ts = document.getElementById("toastSub");
   let toastTimer;
 
@@ -394,10 +446,209 @@
     toastTimer = setTimeout(() => toast.classList.remove("show"), 4200);
 
     panel.classList.add("hide");
-    setTimeout(() => { again.style.display = "block"; }, 400);
+    lastEntry = {name, wish, type: picked};
+    setTimeout(() => { after.style.display = "flex"; }, 400);
     document.getElementById("wish").value = "";
   });
-  again.onclick = () => { again.style.display = "none"; panel.classList.remove("hide"); };
+  again.onclick = () => { after.style.display = "none"; panel.classList.remove("hide"); };
+  // ---------- 🎬 shareable clip (canvas → video, all in the browser) ----------
+  const clip = document.getElementById("clip"), cv = document.getElementById("clipCanvas"), cx = cv.getContext("2d");
+  const vid = document.getElementById("clipVideo"), cStatus = document.getElementById("clipStatus");
+  const bMake = document.getElementById("clipMake"), bShare = document.getElementById("clipShare"), bSave = document.getElementById("clipSave");
+  const CW = 720, CH = 1280, DUR = 7000;
+  const cStars = Array.from({length: 110}, () => [Math.random()*CW, Math.random()*CH*.52, Math.random()*1.6+.4, Math.random()*6.28]);
+  const imgCache = {};
+  function ktImage(type) {
+    if (imgCache[type]) return imgCache[type];
+    imgCache[type] = new Promise(res => {
+      const im = new Image();
+      im.onload = () => res(im); im.onerror = () => res(null);
+      im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="400" viewBox="0 0 120 100">${ART[type]()}</svg>`);
+    });
+    return imgCache[type];
+  }
+  function wrapLines(text, maxW) {
+    // break on Thai word boundaries (never split a vowel/tone mark from its letter)
+    let parts;
+    try { parts = Array.from(new Intl.Segmenter("th", {granularity: "word"}).segment(text), x => x.segment); }
+    catch (e) { parts = text.match(/\S\p{M}*|\s/gu) || [text]; }
+    const out = []; let line = "";
+    for (const w of parts) {
+      const test = line + w;
+      if (cx.measureText(test).width > maxW && line.trim()) { out.push(line.trim()); line = w.trimStart(); }
+      else line = test;
+    }
+    if (line.trim()) out.push(line.trim());
+    return out.slice(0, 4);
+  }
+  const ease = x => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+
+  function drawFrame(t, d) {
+    const k = t / 1000, horizon = CH * .56;
+    // sky
+    let g = cx.createLinearGradient(0, 0, 0, horizon);
+    g.addColorStop(0, "#060b24"); g.addColorStop(.6, "#121a4a"); g.addColorStop(1, "#2a2f6b");
+    cx.fillStyle = g; cx.fillRect(0, 0, CW, horizon);
+    for (const [x, y, r, ph] of cStars) { cx.globalAlpha = .3 + .7 * Math.abs(Math.sin(ph + k * 1.3)); cx.fillStyle = "#fff"; cx.fillRect(x, y, r, r); }
+    cx.globalAlpha = 1;
+    // moon
+    const mx = 560, my = 370, mr = 80;
+    g = cx.createRadialGradient(mx, my, mr * .6, mx, my, mr * 3);
+    g.addColorStop(0, "rgba(255,230,160,.35)"); g.addColorStop(1, "rgba(255,220,140,0)");
+    cx.fillStyle = g; cx.beginPath(); cx.arc(mx, my, mr * 3, 0, 7); cx.fill();
+    g = cx.createRadialGradient(mx - 25, my - 25, 5, mx, my, mr);
+    g.addColorStop(0, "#fffbe8"); g.addColorStop(.6, "#fbecc0"); g.addColorStop(1, "#e9d39a");
+    cx.fillStyle = g; cx.beginPath(); cx.arc(mx, my, mr, 0, 7); cx.fill();
+    // hills
+    cx.fillStyle = "#050817"; cx.beginPath(); cx.moveTo(0, horizon);
+    for (let x = 0; x <= CW; x += 20) cx.lineTo(x, horizon - 38 - Math.sin(x / 90) * 14 - Math.sin(x / 37) * 6);
+    cx.lineTo(CW, horizon); cx.fill();
+    cx.beginPath(); cx.moveTo(200, horizon - 46); cx.lineTo(222, horizon - 96); cx.lineTo(244, horizon - 46); cx.fill();
+    // river
+    g = cx.createLinearGradient(0, horizon, 0, CH);
+    g.addColorStop(0, "#0d1a45"); g.addColorStop(.4, "#0a1438"); g.addColorStop(1, "#050a22");
+    cx.fillStyle = g; cx.fillRect(0, horizon, CW, CH - horizon);
+    for (let y = horizon + 14; y < horizon + 300; y += 10) { // moon reflection
+      cx.globalAlpha = .55 * (1 - (y - horizon) / 300);
+      const w = 30 + 14 * Math.sin(k * 3 + y / 9);
+      cx.fillStyle = "#ffe6a0"; cx.fillRect(mx - w / 2, y, w, 3);
+    }
+    cx.globalAlpha = 1; cx.strokeStyle = "rgba(125,143,214,.35)"; cx.lineWidth = 1.6;
+    for (let i = 0, y = horizon + 26; y < CH; i++, y += 22 + i * 3) {
+      cx.beginPath();
+      for (let x = 0; x <= CW; x += 8) cx.lineTo(x, y + Math.sin(x / 19 + k * (1.4 + i * .1) + i) * (2 + i * .3));
+      cx.stroke();
+    }
+    // background krathongs
+    d.bg.forEach((b, i) => {
+      if (!b.img) return;
+      const x = ((b.x + k * b.v) % (CW + 200)) - 100, y = horizon + 70 + i * 40 + Math.sin(k * 1.6 + i) * 2;
+      cx.globalAlpha = .85; cx.drawImage(b.img, x - 60 * b.s, y - 100 * b.s, 120 * b.s, 100 * b.s);
+    });
+    cx.globalAlpha = 1;
+    // hero krathong
+    const p = ease(k / 2.6), kx = -160 + p * (CW / 2 + 160) + Math.max(0, k - 2.6) * 10;
+    const ky = CH * .80 + Math.sin(k * 1.7) * 6, sc = 2.6;
+    g = cx.createRadialGradient(kx, ky - 150, 10, kx, ky - 150, 190);
+    g.addColorStop(0, `rgba(255,200,100,${.38 + .08 * Math.sin(k * 9)})`); g.addColorStop(1, "rgba(255,200,100,0)");
+    cx.fillStyle = g; cx.beginPath(); cx.arc(kx, ky - 150, 190, 0, 7); cx.fill();
+    g = cx.createRadialGradient(kx, ky + 10, 10, kx, ky + 10, 200);
+    g.addColorStop(0, "rgba(255,210,120,.3)"); g.addColorStop(1, "rgba(255,210,120,0)");
+    cx.fillStyle = g; cx.save(); cx.scale(1, .2); cx.beginPath(); cx.arc(kx, (ky + 10) / .2, 200, 0, 7); cx.fill(); cx.restore();
+    if (d.img) { cx.save(); cx.translate(kx, ky); cx.rotate(Math.sin(k * 1.4) * .04); cx.drawImage(d.img, -60 * sc, -100 * sc, 120 * sc, 100 * sc); cx.restore(); }
+    // name tag
+    cx.textAlign = "center"; cx.textBaseline = "middle";
+    cx.font = '500 34px "Mitr", sans-serif';
+    const nw = cx.measureText(d.name).width + 44, ny = ky - 100 * sc - 34;
+    cx.globalAlpha = ease((k - 1) / .8);
+    cx.fillStyle = "rgba(10,16,50,.75)"; cx.strokeStyle = "rgba(255,210,122,.7)"; cx.lineWidth = 2;
+    cx.beginPath(); cx.roundRect(kx - nw / 2, ny - 26, nw, 52, 26); cx.fill(); cx.stroke();
+    cx.fillStyle = "#ffd27a"; cx.fillText(d.name, kx, ny + 1);
+    // title
+    cx.globalAlpha = ease(k / .8);
+    cx.shadowColor = "rgba(255,190,90,.6)"; cx.shadowBlur = 24;
+    cx.font = '700 76px "Charm", serif'; cx.fillStyle = "#ffd27a"; cx.fillText("ลอยกระทง", CW / 2, 120);
+    cx.shadowBlur = 0;
+    cx.font = '400 28px "Mitr", sans-serif'; cx.fillStyle = "#b9bfdc"; cx.fillText("กระทงรักษ์โลก · ไม่มีขยะสักชิ้น 🌱", CW / 2, 188);
+    // wish
+    if (d.wish) {
+      cx.globalAlpha = ease((k - 2.4) / 1.2);
+      cx.font = '700 54px "Charm", serif';
+      const lines = wrapLines(d.wish, CW - 120), lh = 70, y0 = 560 - (lines.length - 1) * lh / 2;
+      cx.shadowColor = "rgba(0,0,0,.6)"; cx.shadowBlur = 12; cx.fillStyle = "#fff6dc";
+      lines.forEach((l, i) => cx.fillText(l, CW / 2, y0 + i * lh));
+      cx.shadowBlur = 0;
+    }
+    // footer
+    cx.globalAlpha = .85; cx.font = '400 26px "Mitr", sans-serif'; cx.fillStyle = "#cfd4f0";
+    cx.fillText("ลอยกระทงของคุณได้ที่ " + SITE, CW / 2, CH - 50);
+    // fade in/out
+    const fade = Math.max(1 - k / .5, (k * 1000 - (DUR - 500)) / 500, 0);
+    if (fade > 0) { cx.globalAlpha = Math.min(1, fade); cx.fillStyle = "#000"; cx.fillRect(0, 0, CW, CH); }
+    cx.globalAlpha = 1;
+  }
+
+  let clipBlob = null, clipExt = "mp4", previewRaf = 0, busy = false;
+  async function clipData() {
+    try { await document.fonts.ready; await Promise.all(['700 76px "Charm"', '500 34px "Mitr"', '400 26px "Mitr"'].map(f => document.fonts.load(f, "กข"))); } catch (e) {}
+    const types = ids.filter(t => t !== lastEntry.type);
+    const bgImgs = await Promise.all(types.map(ktImage));
+    return {
+      name: lastEntry.name, wish: document.getElementById("clipWish").checked ? lastEntry.wish : "",
+      img: await ktImage(lastEntry.type),
+      bg: bgImgs.map((img, i) => ({img, x: 120 + i * 260, v: 18 + i * 6, s: .55 + i * .12}))
+    };
+  }
+  async function preview() {
+    cancelAnimationFrame(previewRaf);
+    const d = await clipData(), t0 = performance.now();
+    const loop = now => { drawFrame(Math.min((now - t0) % (DUR + 800), DUR - 600), d); previewRaf = requestAnimationFrame(loop); };
+    previewRaf = requestAnimationFrame(loop);
+  }
+  function resetClip() {
+    clipBlob = null; vid.hidden = true; cv.hidden = false; vid.removeAttribute("src");
+    bShare.hidden = bSave.hidden = true; bMake.hidden = false; bMake.disabled = false;
+    cStatus.textContent = "คลิปแนวตั้งยาว 7 วินาที เหมาะกับสตอรี่ / TikTok / Reels";
+  }
+  document.getElementById("clipBtn").onclick = () => { if (!lastEntry) return; resetClip(); clip.classList.add("open"); preview(); };
+  document.getElementById("clipX").onclick = () => { clip.classList.remove("open"); cancelAnimationFrame(previewRaf); };
+  document.getElementById("clipWish").onchange = () => { if (!busy) { resetClip(); preview(); } };
+
+  bMake.onclick = async () => {
+    if (busy) return;
+    const canRec = typeof MediaRecorder !== "undefined" && cv.captureStream;
+    const mime = canRec ? ["video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9", "video/webm"].find(m => MediaRecorder.isTypeSupported(m)) : null;
+    cancelAnimationFrame(previewRaf);
+    const d = await clipData();
+    if (!mime) { // no video recording on this browser → still image
+      drawFrame(DUR - 900, d);
+      cv.toBlob(b => { clipBlob = b; clipExt = "png"; cStatus.textContent = "เบราว์เซอร์นี้ทำวิดีโอไม่ได้ เลยทำเป็นรูปให้แทน"; bMake.hidden = true; bShare.hidden = bSave.hidden = false; }, "image/png");
+      return;
+    }
+    busy = true; bMake.disabled = true;
+    const stream = cv.captureStream(30), chunks = [];
+    const rec = new MediaRecorder(stream, {mimeType: mime, videoBitsPerSecond: 5000000});
+    rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+    rec.onstop = () => {
+      busy = false;
+      clipExt = mime.startsWith("video/mp4") ? "mp4" : "webm";
+      clipBlob = new Blob(chunks, {type: mime.split(";")[0]});
+      vid.src = URL.createObjectURL(clipBlob); vid.hidden = false; cv.hidden = true; vid.play().catch(() => {});
+      cStatus.textContent = "คลิปพร้อมแล้ว ✨ แชร์หรือบันทึกลงเครื่องได้เลย";
+      bMake.hidden = true; bShare.hidden = bSave.hidden = false;
+    };
+    rec.start(250);
+    const t0 = performance.now();
+    const loop = now => {
+      const t = now - t0;
+      drawFrame(Math.min(t, DUR), d);
+      cStatus.textContent = `กำลังทำคลิป… ${Math.min(100, Math.round(t / DUR * 100))}%`;
+      if (t < DUR + 120) requestAnimationFrame(loop); else rec.stop();
+    };
+    requestAnimationFrame(loop);
+  };
+  const fileName = () => `loykrathong-${Date.now()}.${clipExt}`;
+  bSave.onclick = () => {
+    if (!clipBlob) return;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(clipBlob); a.download = fileName();
+    document.body.appendChild(a); a.click(); a.remove();
+    cStatus.textContent = "บันทึกแล้ว ดูในไฟล์ดาวน์โหลด / คลังรูปภาพ";
+  };
+  bShare.onclick = async () => {
+    if (!clipBlob) return;
+    const file = new File([clipBlob], fileName(), {type: clipBlob.type});
+    try {
+      if (navigator.canShare && navigator.canShare({files: [file]})) {
+        await navigator.share({files: [file], title: "ลอยกระทงออนไลน์", text: "มาลอยกระทงรักษ์โลกด้วยกัน 🪷 " + SHARE_URL});
+        return;
+      }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    bSave.onclick();
+    cStatus.textContent = "เครื่องนี้แชร์ไฟล์ตรงไม่ได้ บันทึกคลิปให้แล้ว นำไปโพสต์ได้เลย";
+  };
+
 })();
 </script>
 </body>

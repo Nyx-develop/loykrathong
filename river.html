@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ลอยกระทงออนไลน์แบบรักษ์โลก เลือกกระทงใบตอง ขนมปัง ผักตบชวา หรือกะลา ใส่ชื่อและคำอธิษฐาน ไม่มีขยะสักชิ้น">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nyx-develop.github.io/loykrathong/">
+<meta property="og:title" content="ลอยกระทงออนไลน์ · กระทงรักษ์โลก 🪷">
+<meta property="og:description" content="มาลอยกระทงด้วยกัน ใส่ชื่อ อธิษฐาน แล้วปล่อยกระทงลอยไปกับสายน้ำ ไม่มีขยะสักชิ้น">
+<meta property="og:image" content="https://nyx-develop.github.io/loykrathong/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<title>สายน้ำแห่งคำอธิษฐาน · ลอยกระทงออนไลน์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Charm:wght@700&family=Mitr:wght@400;500&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night1:#060b24; --night2:#121a4a; --night3:#2a2f6b;
+    --gold:#ffd27a; --gold2:#ffb347; --leaf:#5c9e3a;
+    --ink:#f4f1ea; --muted:#b9bfdc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--night1);color:var(--ink);font-family:"Sarabun",system-ui,sans-serif}
+  #scene{position:fixed;inset:0;overflow:hidden}
+  .sky{position:absolute;inset:0 0 42% 0;background:linear-gradient(180deg,var(--night1) 0%,var(--night2) 55%,var(--night3) 100%)}
+  .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:twinkle 3s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+  .moon{position:absolute;top:20%;right:12%;width:min(22vw,120px);aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle at 38% 35%,#fffbe8 0%,#fbecc0 55%,#e9d39a 100%);
+    box-shadow:0 0 40px 12px rgba(255,236,170,.35),0 0 120px 50px rgba(255,220,140,.15)}
+  .moon::after{content:"";position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 62% 58%,rgba(200,170,110,.25) 0 9%,transparent 10%),radial-gradient(circle at 40% 68%,rgba(200,170,110,.2) 0 6%,transparent 7%),radial-gradient(circle at 66% 30%,rgba(200,170,110,.18) 0 5%,transparent 6%)}
+  .treeline{position:absolute;left:0;right:0;width:100%;bottom:42%;height:70px}
+  .river{position:absolute;left:0;right:0;bottom:0;height:42%;
+    background:linear-gradient(180deg,#0d1a45 0%,#0a1438 40%,#050a22 100%)}
+  .reflect{position:absolute;top:0;right:calc(12% + min(11vw,60px) - 30px);width:60px;height:100%;
+    background:repeating-linear-gradient(180deg,rgba(255,230,160,.55) 0 3px,transparent 3px 11px);
+    filter:blur(1.5px);opacity:.55;-webkit-mask:linear-gradient(180deg,#000 0%,transparent 85%);mask:linear-gradient(180deg,#000 0%,transparent 85%);
+    animation:shimmer 2.4s ease-in-out infinite}
+  @keyframes shimmer{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.5)}}
+  .wave{position:absolute;left:0;width:200%;height:14px;opacity:.35;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='14'%3E%3Cpath d='M0 7 Q15 1 30 7 T60 7 T90 7 T120 7' fill='none' stroke='%237d8fd6' stroke-width='1.4'/%3E%3C/svg%3E");
+    background-repeat:repeat-x;animation:flow linear infinite}
+  @keyframes flow{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+  #krathongs{position:absolute;inset:0}
+  .kt{position:absolute;left:0;top:0;will-change:transform;transform-origin:50% 100%}
+  .kt svg{display:block;width:120px;height:100px;overflow:visible}
+  .kt .glow{position:absolute;left:50%;top:10px;width:90px;height:90px;transform:translateX(-50%);border-radius:50%;
+    background:radial-gradient(circle,rgba(255,200,100,.45),transparent 65%);pointer-events:none;animation:glow 1.6s ease-in-out infinite}
+  .kt .ripple{position:absolute;left:50%;bottom:-6px;width:150px;height:26px;transform:translateX(-50%);border-radius:50%;
+    background:radial-gradient(ellipse,rgba(255,210,120,.28),transparent 70%)}
+  @keyframes glow{0%,100%{opacity:.75}50%{opacity:1}}
+  .kt .tag{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);white-space:nowrap;font:500 13px "Mitr",sans-serif;
+    padding:3px 10px;border-radius:99px;background:rgba(10,16,50,.7);border:1px solid rgba(255,210,122,.5);color:var(--gold)}
+  .kt .tag.other{color:#e8e4ff;border-color:rgba(200,190,255,.35);background:rgba(10,16,50,.55);font-weight:400}
+  .share{display:flex;gap:8px;margin-top:10px}
+  .share a,.share button{flex:1;text-align:center;text-decoration:none;border-radius:12px;padding:9px 6px;font:500 14px "Mitr",sans-serif;cursor:pointer;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--ink)}
+  .share .line{background:#06c755;border-color:#06c755;color:#fff}
+  .share .fb{background:#1877f2;border-color:#1877f2;color:#fff}
+  .flame{transform-origin:60px 30px;animation:flick .18s ease-in-out infinite alternate}
+  @keyframes flick{from{transform:scale(1,1) skewX(-2deg)}to{transform:scale(.92,1.08) skewX(3deg)}}
+  .fish{position:absolute;width:26px;height:14px;pointer-events:none;animation:jump 1.3s ease-in-out forwards}
+  @keyframes jump{0%{transform:translate(0,10px) rotate(-30deg);opacity:0}20%{opacity:1}50%{transform:translate(14px,-18px) rotate(0)}100%{transform:translate(30px,10px) rotate(40deg);opacity:0}}
+
+  header{position:fixed;top:0;left:0;right:0;text-align:center;padding:18px 16px 0;pointer-events:none}
+  header h1{font:700 clamp(30px,8vw,52px)/1.1 "Charm",serif;color:var(--gold);text-shadow:0 0 18px rgba(255,190,90,.45)}
+  header p{font:400 clamp(13px,3.6vw,16px) "Mitr",sans-serif;color:var(--muted);margin-top:4px}
+  .stats{display:inline-flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+  .chip{font:400 12px "Mitr",sans-serif;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+  .chip b{color:#9be37a;font-weight:500}
+
+  #panel{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(520px,calc(100% - 20px));
+    background:rgba(8,13,42,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,210,122,.25);border-radius:20px;padding:14px 14px 16px;transition:transform .4s ease,opacity .4s}
+  #panel.hide{transform:translate(-50%,120%);opacity:0;pointer-events:none}
+  #panel h2{font:500 15px "Mitr",sans-serif;color:var(--gold);margin-bottom:8px}
+  .types{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .type{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);border-radius:14px;padding:6px 2px 6px;cursor:pointer;color:var(--ink);text-align:center;font:400 12px "Mitr",sans-serif;transition:.2s}
+  .type svg{width:100%;height:46px;display:block}
+  .type.on{border-color:var(--gold);background:rgba(255,210,122,.12);box-shadow:0 0 14px rgba(255,200,100,.25)}
+  .fact{font-size:13px;color:#cfe8c2;margin:10px 2px 10px;min-height:36px;line-height:1.45}
+  .fact::before{content:"🌱 "}
+  input,textarea{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:12px;color:var(--ink);
+    font:400 15px "Sarabun",sans-serif;padding:10px 12px;outline:none}
+  input:focus,textarea:focus{border-color:var(--gold)}
+  textarea{resize:none;height:56px;margin-top:8px}
+  .go{margin-top:10px;width:100%;border:0;border-radius:14px;padding:12px;font:500 17px "Mitr",sans-serif;cursor:pointer;color:#2a1600;
+    background:linear-gradient(180deg,#ffe29a,#ffb347);box-shadow:0 4px 18px rgba(255,170,70,.35)}
+  .go:active{transform:scale(.98)}
+  #after{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:none;gap:10px;z-index:250}
+  #after button,.pill{border:1px solid rgba(255,210,122,.6);background:rgba(8,13,42,.8);color:var(--gold);font:500 15px "Mitr",sans-serif;padding:10px 18px;border-radius:99px;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
+  #after .hot,.pill.hot{background:linear-gradient(180deg,#ffe29a,#ffb347);color:#2a1600;border-color:transparent}
+  header a.pill{pointer-events:auto;font-size:13px;padding:5px 12px;margin-top:8px}
+  .modal{position:fixed;inset:0;z-index:500;background:rgba(3,6,20,.78);display:none;align-items:center;justify-content:center;padding:12px}
+  .modal.open{display:flex}
+  .modal .card{width:min(440px,100%);max-height:96vh;overflow:auto;background:#0b1236;border:1px solid rgba(255,210,122,.35);border-radius:18px;padding:12px 14px 16px}
+  .modal .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .modal .hd h3{font:700 24px "Charm",serif;color:var(--gold)}
+  .modal .x{background:none;border:0;color:var(--muted);font-size:26px;cursor:pointer;line-height:1}
+  .stage{position:relative;margin:8px auto;height:min(52vh,460px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#060b24}
+  .stage canvas,.stage video{position:absolute;inset:0;width:100%;height:100%}
+  .chk{display:flex;align-items:center;gap:8px;font:400 14px "Mitr",sans-serif;color:var(--ink);justify-content:center}
+  .chk input{width:18px;height:18px;accent-color:#ffb347}
+  #clipStatus{text-align:center;font-size:13px;color:#cfe8c2;min-height:20px;margin:4px 0}
+  .btns{display:flex;gap:8px}
+  .btns button{flex:1;border-radius:12px;padding:11px 6px;font:500 15px "Mitr",sans-serif;cursor:pointer;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--ink)}
+  .btns button.hot{background:linear-gradient(180deg,#ffe29a,#ffb347);color:#2a1600;border-color:transparent}
+  .btns button:disabled{opacity:.5}
+  body[data-mode="river"] #panel,body[data-mode="river"] .mine-chip{display:none}
+  .river-only{display:none}
+  body[data-mode="river"] .river-only{display:inline-block}
+  body[data-mode="river"] .main-only{display:none}
+  #emptyNote{position:fixed;left:50%;top:62%;transform:translateX(-50%);text-align:center;font:400 15px "Mitr",sans-serif;color:var(--muted);display:none;width:90%}
+  #riverCta{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:250}
+  #again{border:1px solid rgba(255,210,122,.6);background:rgba(8,13,42,.8);color:var(--gold);
+    font:500 15px "Mitr",sans-serif;padding:10px 22px;border-radius:99px;cursor:pointer;display:none}
+  #toast{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%) scale(.9);width:min(420px,calc(100% - 40px));text-align:center;
+    background:rgba(8,13,42,.88);border:1px solid rgba(255,210,122,.4);border-radius:18px;padding:16px 18px;opacity:0;pointer-events:none;transition:.4s}
+  #toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  #toast .wish{font:700 24px/1.3 "Charm",serif;color:var(--gold)}
+  #toast .sub{font-size:13px;color:#cfe8c2;margin-top:8px;line-height:1.45}
+
+  #book{position:fixed;inset:0;z-index:400;background:rgba(3,6,20,.7);display:none;align-items:center;justify-content:center;padding:16px}
+  #book.open{display:flex}
+  #book .card{width:min(520px,100%);max-height:80vh;display:flex;flex-direction:column;background:#0b1236;border:1px solid rgba(255,210,122,.35);border-radius:18px;overflow:hidden}
+  #book .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+  #book .hd h3{font:700 24px "Charm",serif;color:var(--gold)}
+  #book .x{background:none;border:0;color:var(--muted);font-size:24px;cursor:pointer;line-height:1}
+  #book .meta{font:400 12px "Mitr",sans-serif;color:var(--muted);padding:8px 16px 0}
+  #book ul{list-style:none;overflow:auto;padding:8px 12px 14px}
+  #book li{background:rgba(255,255,255,.05);border-radius:12px;padding:10px 12px;margin-top:8px}
+  #book li .n{font:500 14px "Mitr",sans-serif;color:var(--gold)}
+  #book li .w{font-size:15px;margin-top:2px;line-height:1.45}
+  #book li .d{font-size:11.5px;color:var(--muted);margin-top:4px}
+  #book .empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:14px}
+  .tips{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5;text-align:center}
+</style>
+</head>
+<body data-mode="river">
+<div id="scene">
+  <div class="sky" id="sky"></div>
+  <div class="moon"></div>
+  <svg class="treeline" viewBox="0 0 1000 70" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="#050817" d="M0 70V46C60 30 120 40 180 34S300 22 360 30S480 44 540 36S660 20 720 28S840 40 900 32S980 30 1000 36V70Z"/>
+    <path fill="#050817" d="M628 30L644 6L660 30Z"/>
+  </svg>
+  <div class="river" id="river">
+    <div class="reflect"></div>
+  </div>
+  <div id="krathongs"></div>
+</div>
+
+<header>
+  <h1>ลอยกระทงออนไลน์</h1>
+  <p class="main-only">กระทงรักษ์โลก · สายน้ำสะอาด ใจก็สะอาด</p>
+  <p class="river-only">สายน้ำแห่งคำอธิษฐาน · ทุกคนที่มาลอยกระทง</p>
+  <div class="stats">
+    <span class="chip mine-chip">คุณลอยแล้ว <span id="mine">0</span> กระทง</span>
+    <span class="chip" style="display:none">ลอยแล้วทั้งหมด <span id="total">0</span> กระทง</span>
+    <span class="chip">ขยะในแม่น้ำ <b>0 ชิ้น</b> 🌏</span>
+  </div>
+  <div><a class="pill main-only" href="river.html">🌊 ดูกระทงของทุกคน</a></div>
+</header>
+
+<form id="panel" autocomplete="off">
+  <h2>เลือกกระทงรักษ์โลก</h2>
+  <div class="types" id="types"></div>
+  <div class="fact" id="fact"></div>
+  <input id="name" maxlength="24" required placeholder="ชื่อของคุณ">
+  <textarea id="wish" maxlength="120" required placeholder="คำอธิษฐาน เช่น ขอให้ครอบครัวสุขภาพแข็งแรง"></textarea>
+  <button class="go" type="submit">ลอยกระทง 🪷</button>
+  <div class="tips">ลอยจริงก็รักษ์โลกได้ · ใช้วัสดุธรรมชาติ ไม่ใช้โฟม ไม่ใช้ลวดหรือแม็กเย็บ · ลอยรวมกันครอบครัวละใบ</div>
+  <div class="share">
+    <a class="line" id="lineShare" href="#" target="_blank" rel="noopener">แชร์ LINE</a>
+    <a class="fb" id="fbShare" href="#" target="_blank" rel="noopener">Facebook</a>
+    <button type="button" id="copyShare">🔗 แชร์ลิงก์</button>
+  </div>
+</form>
+<div id="after">
+  <button id="again" type="button">ลอยอีกใบ 🪷</button>
+  <button id="clipBtn" class="hot" type="button">🎬 ทำคลิปไว้แชร์</button>
+</div>
+<div id="emptyNote">ยังไม่มีกระทงในสายน้ำ<br>มาเป็นคนแรกที่ลอยกระทงกัน 🪷</div>
+<a id="riverCta" class="pill hot river-only" href="./">🪷 ลอยกระทงของคุณ</a>
+
+<div id="clip" class="modal" role="dialog" aria-modal="true">
+  <div class="card">
+    <div class="hd"><h3>คลิปลอยกระทงของคุณ</h3><button class="x" id="clipX" type="button" aria-label="ปิด">×</button></div>
+    <label class="chk"><input type="checkbox" id="clipWish" checked> ใส่คำอธิษฐานในคลิป</label>
+    <div class="stage"><canvas id="clipCanvas" width="720" height="1280"></canvas><video id="clipVideo" playsinline muted loop controls hidden></video></div>
+    <div id="clipStatus">คลิปแนวตั้งยาว 7 วินาที เหมาะกับสตอรี่ / TikTok / Reels</div>
+    <div class="btns">
+      <button id="clipMake" class="hot" type="button">สร้างคลิป</button>
+      <button id="clipShare" class="hot" type="button" hidden>แชร์คลิป</button>
+      <button id="clipSave" type="button" hidden>บันทึกคลิป</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><div class="wish" id="toastWish"></div><div class="sub" id="toastSub"></div></div>
+
+<script>
+(() => {
+  // ใส่ URL ของ Apps Script Web App ตรงนี้ (ลงท้ายด้วย /exec)
+  const SAVE_URL = "";
+  const RIVER = document.body.dataset.mode === "river";
+  const SITE = "nyx-develop.github.io/loykrathong";
+
+  // ---------- krathong artwork (inline SVG, viewBox 0 0 120 100) ----------
+  const candle = () => `
+    <line x1="48" y1="50" x2="44" y2="26" stroke="#8a5a3c" stroke-width="1.4"/>
+    <line x1="72" y1="50" x2="76" y2="26" stroke="#8a5a3c" stroke-width="1.4"/>
+    <circle cx="44" cy="26" r="1.6" fill="#ff5a3c"/><circle cx="76" cy="26" r="1.6" fill="#ff5a3c"/>
+    <rect x="56.5" y="32" width="7" height="22" rx="1.5" fill="#f7efdc"/>
+    <path class="flame" d="M60 14c4 6 6 10 6 13a6 6 0 0 1-12 0c0-3 2-7 6-13z" fill="url(#fl)"/>
+    <defs><radialGradient id="fl" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#fffbe0"/><stop offset=".45" stop-color="#ffd35a"/><stop offset="1" stop-color="#ff8a2a"/></radialGradient></defs>`;
+
+  const petalRow = (fills, stroke) => {
+    let s = "";
+    for (let i = -4; i <= 4; i++) {
+      const x = 60 + i * 10, top = 46 + Math.abs(i) * 2.2;
+      s += `<path d="M${x-7} 68 L${x} ${top} L${x+7} 68 Z" fill="${fills[(i+8)%fills.length]}" stroke="${stroke}" stroke-width=".8"/>`;
+    }
+    return s;
+  };
+  const flower = (cx, cy, c, r=4.2) =>
+    `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}"/><circle cx="${cx}" cy="${cy}" r="${r*.4}" fill="#fff4b0" opacity=".8"/>`;
+
+  const ART = {
+    leaf: () => `
+      <ellipse cx="60" cy="74" rx="48" ry="11" fill="#3d6a24"/>
+      <path d="M12 70c0 6 22 11 48 11s48-5 48-11v-5H12z" fill="#d6dfa6"/>
+      <ellipse cx="60" cy="65" rx="48" ry="10" fill="#b9c97a"/>
+      ${petalRow(["#3f7d2c","#5c9e3a"], "#2b5a1d")}
+      ${flower(42,60,"#f4a300")}${flower(78,60,"#f4a300")}${flower(60,58,"#ff6fa3",4.6)}${flower(51,62,"#fff")}${flower(69,62,"#fff")}
+      ${candle()}`,
+    bread: () => `
+      <ellipse cx="60" cy="74" rx="46" ry="11" fill="#b9783a"/>
+      <path d="M14 70c0 6 20 11 46 11s46-5 46-11v-5H14z" fill="#cf9150"/>
+      <ellipse cx="60" cy="65" rx="46" ry="10" fill="#f2d29b"/>
+      ${petalRow(["#f7c6d0","#c6e3f7","#f9e2a6","#c9f2c4"], "#e0b77a")}
+      <circle cx="44" cy="62" r="2" fill="#a06030" opacity=".5"/><circle cx="74" cy="63" r="2" fill="#a06030" opacity=".5"/>
+      ${flower(60,58,"#ff8fb1",4.4)}
+      ${candle()}`,
+    hyacinth: () => `
+      <ellipse cx="60" cy="73" rx="46" ry="11" fill="#2f5a1e"/>
+      <ellipse cx="60" cy="66" rx="44" ry="10" fill="#4f7b34"/>
+      ${[[24,64],[38,58],[52,55],[68,55],[82,58],[96,64],[46,66],[74,66]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="9" ry="6.5" fill="#6fae4a" stroke="#3e7a28" stroke-width=".8"/>`).join("")}
+      ${[[40,52],[46,48],[52,51],[72,50],[78,46],[82,52],[60,50]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.4" fill="#b48ad8"/><circle cx="${x}" cy="${y}" r="1" fill="#ffe066"/>`).join("")}
+      ${candle()}`,
+    coconut: () => `
+      <path d="M16 62 Q16 86 60 86 Q104 86 104 62 Z" fill="#6b4423"/>
+      ${[26,38,50,62,74,86,98].map(x=>`<path d="M${x} 64 q-2 10 ${(x-60)*.12} 20" stroke="#4e2f17" stroke-width="1" fill="none"/>`).join("")}
+      <ellipse cx="60" cy="62" rx="44" ry="8" fill="#a87b4f"/>
+      <ellipse cx="60" cy="62" rx="38" ry="5.5" fill="#f3ead6"/>
+      ${[0,72,144,216,288].map(a=>`<ellipse cx="38" cy="58" rx="4" ry="7" fill="#fffaf0" stroke="#f1d9a0" stroke-width=".6" transform="rotate(${a} 38 62)"/>`).join("")}<circle cx="38" cy="62" r="2.4" fill="#ffc93c"/>
+      ${[0,72,144,216,288].map(a=>`<ellipse cx="82" cy="58" rx="4" ry="7" fill="#ffe1ec" stroke="#f3b6c8" stroke-width=".6" transform="rotate(${a} 82 62)"/>`).join("")}<circle cx="82" cy="62" r="2.4" fill="#ffc93c"/>
+      ${candle()}`
+  };
+
+  const TYPES = [
+    {id:"leaf", name:"ใบตอง", fact:"หยวกกล้วยกับใบตอง ย่อยสลายได้เองตามธรรมชาติ ไม่ทิ้งขยะไว้ในแม่น้ำ"},
+    {id:"bread", name:"ขนมปัง", fact:"เป็นอาหารปลาได้ แต่ถ้าลอยกันเยอะเกินไปน้ำอาจเน่าเสีย ลอยพอดีๆ นะ"},
+    {id:"hyacinth", name:"ผักตบชวา", fact:"เอาวัชพืชที่กีดขวางทางน้ำมาใช้ประโยชน์ ได้กระทงสวยแถมช่วยแม่น้ำ"},
+    {id:"coconut", name:"กะลา", fact:"ลอยเสร็จเก็บกลับมาใช้ใหม่ได้ ทำกระทงปีหน้าหรือเป็นกระถางต้นไม้"}
+  ];
+
+  const svg = (id) => `<svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">${ART[id]()}</svg>`;
+
+  // ---------- scene setup ----------
+  const sky = document.getElementById("sky");
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement("div");
+    s.className = "star";
+    s.style.left = Math.random()*100 + "%";
+    s.style.top = Math.random()*95 + "%";
+    s.style.animationDelay = (Math.random()*3) + "s";
+    if (Math.random() < .15) { s.style.width = s.style.height = "3px"; }
+    sky.appendChild(s);
+  }
+  const river = document.getElementById("river");
+  for (let i = 0; i < 9; i++) {
+    const w = document.createElement("div");
+    w.className = "wave";
+    w.style.top = (6 + i*11) + "%";
+    w.style.animationDuration = (14 + i*3) + "s";
+    w.style.opacity = (.15 + i*.04).toFixed(2);
+    river.appendChild(w);
+  }
+
+  // ---------- UI ----------
+  let picked = "leaf";
+  const typesEl = document.getElementById("types"), factEl = document.getElementById("fact");
+  TYPES.forEach(t => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "type" + (t.id === picked ? " on" : "");
+    b.innerHTML = svg(t.id) + t.name;
+    b.onclick = () => {
+      picked = t.id;
+      [...typesEl.children].forEach(c => c.classList.toggle("on", c === b));
+      factEl.textContent = t.fact;
+    };
+    typesEl.appendChild(b);
+  });
+  factEl.textContent = TYPES[0].fact;
+
+  let mine = 0;
+  try { mine = parseInt(localStorage.getItem("lk-mine") || "0", 10) || 0; } catch (e) {}
+  const mineEl = document.getElementById("mine");
+  mineEl.textContent = mine;
+
+  // ---------- floating ----------
+  const layer = document.getElementById("krathongs");
+  const items = [];
+  let W = innerWidth, H = innerHeight;
+  addEventListener("resize", () => { W = innerWidth; H = innerHeight; });
+
+  function spawn(type, {name = "", depth = Math.random(), x = -140, other = false} = {}) {
+    const el = document.createElement("div");
+    el.className = "kt";
+    el.innerHTML = `<div class="ripple"></div><div class="glow"></div>${svg(type)}${name ? `<div class="tag"></div>` : ""}`;
+    if (name) { const tg = el.querySelector(".tag"); tg.textContent = name; if (other) tg.classList.add("other"); tg.style.transform = `translateX(-50%) scale(${Math.min(2.2, Math.max(1, .95 / (.38 + depth * .82)))})`; tg.style.transformOrigin = "50% 100%"; }
+    layer.appendChild(el);
+    const scale = .38 + depth * .82;
+    const it = {el, type, x, depth, scale, speed: 10 + depth * 22, phase: Math.random()*6.28, mine: !!name, born: performance.now(), fed: 0};
+    el.style.zIndex = Math.round(depth * 100);
+    items.push(it);
+    return it;
+  }
+
+  function fish(it) {
+    const f = document.createElement("div");
+    f.className = "fish";
+    f.innerHTML = `<svg viewBox="0 0 26 14"><path d="M2 7c5-6 13-6 18 0-5 6-13 6-18 0zM20 7l6-5v10z" fill="#ff9f43"/><circle cx="6" cy="6" r="1.2" fill="#222"/></svg>`;
+    const r = it.el.getBoundingClientRect();
+    f.style.left = (r.left + r.width*(.2 + Math.random()*.5)) + "px";
+    f.style.top = (r.bottom - 12) + "px";
+    f.style.zIndex = 200;
+    document.getElementById("scene").appendChild(f);
+    setTimeout(() => f.remove(), 1400);
+  }
+
+  let last = performance.now();
+  function tick(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    const riverTop = H * .58, riverH = H * .42;
+    for (let i = items.length - 1; i >= 0; i--) {
+      const it = items[i];
+      it.x += it.speed * dt;
+      it.phase += dt * 1.6;
+      const y = riverTop + riverH * (.08 + it.depth * .62) - 100 * it.scale + Math.sin(it.phase) * 3 * it.scale;
+      const rot = Math.sin(it.phase * .8) * 3;
+      it.el.style.transform = `translate(${it.x}px, ${y}px) scale(${it.scale}) rotate(${rot}deg)`;
+      if (it.type === "bread" && now - it.born > 2500 && it.fed < 4 && Math.random() < dt * .7) { it.fed++; fish(it); }
+      if (it.x > W + 40) { it.el.remove(); items.splice(i, 1); }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // ---------- other people's krathongs (names only — wishes stay private) ----------
+  const ids = TYPES.map(t => t.id);
+  let others = [], otherIdx = 0;
+  const totalEl = document.getElementById("total");
+  async function loadOthers() {
+    if (!SAVE_URL) return;
+    try {
+      const r = await fetch(SAVE_URL + (RIVER ? "?all=1" : "?list=1"));
+      const j = await r.json();
+      if (Array.isArray(j.items)) others = j.items.filter(it => it && it.name).slice(0, RIVER ? 5000 : 60);
+      if (typeof j.total === "number") { totalEl.textContent = j.total.toLocaleString("th-TH"); totalEl.parentElement.style.display = ""; }
+    } catch (e) {}
+  }
+  const firstLoad = loadOthers();
+  setInterval(loadOthers, 60000);
+  if (RIVER) firstLoad.then(() => { if (!others.length) document.getElementById("emptyNote").style.display = "block"; });
+
+  function spawnOther(opts = {}) {
+    if (others.length) {
+      const it = others[otherIdx++ % others.length];
+      return spawn(ids.includes(it.type) ? it.type : "leaf", {name: String(it.name).slice(0, 24), other: true, ...opts});
+    }
+    return spawn(ids[Math.floor(Math.random()*4)], opts);
+  }
+  if (!RIVER) for (let i = 0; i < 5; i++) spawn(ids[i % 4], {depth: Math.random() * .6, x: Math.random() * W});
+  if (RIVER) firstLoad.then(() => { for (let i = 0; i < Math.min(8, others.length); i++) spawnOther({depth: Math.random(), x: Math.random() * W * .9}); });
+  setTimeout(() => { for (let i = 0; i < 3; i++) if (others.length) spawnOther({depth: .2 + Math.random() * .5, x: Math.random() * W * .8}); }, 2500);
+  setInterval(() => {
+    if (document.hidden || items.length > (RIVER ? 34 : 24)) return;
+    if (RIVER && !others.length) return;
+    spawnOther({depth: RIVER ? Math.random() : Math.random() * .7});
+  }, RIVER ? 1300 : 3600);
+
+  // ---------- share ----------
+  const SHARE_URL = location.href.split("#")[0];
+  const SHARE_TEXT = "มาลอยกระทงออนไลน์แบบรักษ์โลกกัน 🪷🌕 ไม่มีขยะสักชิ้น";
+  document.getElementById("lineShare").href = "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(SHARE_URL);
+  document.getElementById("fbShare").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SHARE_URL);
+  document.getElementById("copyShare").onclick = async () => {
+    try {
+      if (navigator.share) { await navigator.share({title: document.title, text: SHARE_TEXT, url: SHARE_URL}); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(SHARE_URL); flash("คัดลอกลิงก์แล้ว ส่งให้เพื่อนได้เลย 🔗"); }
+    catch (e) { flash(SHARE_URL); }
+  };
+  function flash(msg) {
+    tw.textContent = "แชร์ให้เพื่อน"; ts.textContent = msg;
+    toast.classList.add("show"); clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+  }
+
+  // ---------- launch ----------
+  const panel = document.getElementById("panel"), again = document.getElementById("again"), after = document.getElementById("after");
+  let lastEntry = null;
+  const toast = document.getElementById("toast"), tw = document.getElementById("toastWish"), ts = document.getElementById("toastSub");
+  let toastTimer;
+
+  // ---------- saving wishes → Google Sheet (Apps Script Web App) ----------
+  function saveWish(entry) {
+    if (!SAVE_URL) return Promise.resolve(false);
+    return fetch(SAVE_URL, {
+      method: "POST", mode: "no-cors",
+      headers: {"Content-Type": "text/plain;charset=utf-8"},
+      body: JSON.stringify(entry)
+    }).then(() => true).catch(() => false);
+  }
+
+  panel.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim() || "กระทงของฉัน";
+    const wish = document.getElementById("wish").value.trim();
+    const saving = saveWish({name, wish, type: picked, t: Date.now()});
+    others.unshift({name, type: picked});
+    spawn(picked, {name, depth: .78 + Math.random() * .2, x: Math.max(10, W * .12)});
+    mine++; mineEl.textContent = mine;
+    try { localStorage.setItem("lk-mine", mine); } catch (e) {}
+
+    tw.textContent = wish ? "ขอให้ " + wish.replace(/^ขอให้\s*/, "") : "ขอให้สมหวังทุกประการ 🙏";
+    const fact = TYPES.find(t => t.id === picked).fact;
+    ts.textContent = fact;
+    saving.then(ok => { if (ok) ts.textContent = "✓ บันทึกคำอธิษฐานแล้ว · " + fact; });
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 4200);
+
+    panel.classList.add("hide");
+    lastEntry = {name, wish, type: picked};
+    setTimeout(() => { after.style.display = "flex"; }, 400);
+    document.getElementById("wish").value = "";
+  });
+  again.onclick = () => { after.style.display = "none"; panel.classList.remove("hide"); };
+  // ---------- 🎬 shareable clip (canvas → video, all in the browser) ----------
+  const clip = document.getElementById("clip"), cv = document.getElementById("clipCanvas"), cx = cv.getContext("2d");
+  const vid = document.getElementById("clipVideo"), cStatus = document.getElementById("clipStatus");
+  const bMake = document.getElementById("clipMake"), bShare = document.getElementById("clipShare"), bSave = document.getElementById("clipSave");
+  const CW = 720, CH = 1280, DUR = 7000;
+  const cStars = Array.from({length: 110}, () => [Math.random()*CW, Math.random()*CH*.52, Math.random()*1.6+.4, Math.random()*6.28]);
+  const imgCache = {};
+  function ktImage(type) {
+    if (imgCache[type]) return imgCache[type];
+    imgCache[type] = new Promise(res => {
+      const im = new Image();
+      im.onload = () => res(im); im.onerror = () => res(null);
+      im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="400" viewBox="0 0 120 100">${ART[type]()}</svg>`);
+    });
+    return imgCache[type];
+  }
+  function wrapLines(text, maxW) {
+    // break on Thai word boundaries (never split a vowel/tone mark from its letter)
+    let parts;
+    try { parts = Array.from(new Intl.Segmenter("th", {granularity: "word"}).segment(text), x => x.segment); }
+    catch (e) { parts = text.match(/\S\p{M}*|\s/gu) || [text]; }
+    const out = []; let line = "";
+    for (const w of parts) {
+      const test = line + w;
+      if (cx.measureText(test).width > maxW && line.trim()) { out.push(line.trim()); line = w.trimStart(); }
+      else line = test;
+    }
+    if (line.trim()) out.push(line.trim());
+    return out.slice(0, 4);
+  }
+  const ease = x => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+
+  function drawFrame(t, d) {
+    const k = t / 1000, horizon = CH * .56;
+    // sky
+    let g = cx.createLinearGradient(0, 0, 0, horizon);
+    g.addColorStop(0, "#060b24"); g.addColorStop(.6, "#121a4a"); g.addColorStop(1, "#2a2f6b");
+    cx.fillStyle = g; cx.fillRect(0, 0, CW, horizon);
+    for (const [x, y, r, ph] of cStars) { cx.globalAlpha = .3 + .7 * Math.abs(Math.sin(ph + k * 1.3)); cx.fillStyle = "#fff"; cx.fillRect(x, y, r, r); }
+    cx.globalAlpha = 1;
+    // moon
+    const mx = 560, my = 370, mr = 80;
+    g = cx.createRadialGradient(mx, my, mr * .6, mx, my, mr * 3);
+    g.addColorStop(0, "rgba(255,230,160,.35)"); g.addColorStop(1, "rgba(255,220,140,0)");
+    cx.fillStyle = g; cx.beginPath(); cx.arc(mx, my, mr * 3, 0, 7); cx.fill();
+    g = cx.createRadialGradient(mx - 25, my - 25, 5, mx, my, mr);
+    g.addColorStop(0, "#fffbe8"); g.addColorStop(.6, "#fbecc0"); g.addColorStop(1, "#e9d39a");
+    cx.fillStyle = g; cx.beginPath(); cx.arc(mx, my, mr, 0, 7); cx.fill();
+    // hills
+    cx.fillStyle = "#050817"; cx.beginPath(); cx.moveTo(0, horizon);
+    for (let x = 0; x <= CW; x += 20) cx.lineTo(x, horizon - 38 - Math.sin(x / 90) * 14 - Math.sin(x / 37) * 6);
+    cx.lineTo(CW, horizon); cx.fill();
+    cx.beginPath(); cx.moveTo(200, horizon - 46); cx.lineTo(222, horizon - 96); cx.lineTo(244, horizon - 46); cx.fill();
+    // river
+    g = cx.createLinearGradient(0, horizon, 0, CH);
+    g.addColorStop(0, "#0d1a45"); g.addColorStop(.4, "#0a1438"); g.addColorStop(1, "#050a22");
+    cx.fillStyle = g; cx.fillRect(0, horizon, CW, CH - horizon);
+    for (let y = horizon + 14; y < horizon + 300; y += 10) { // moon reflection
+      cx.globalAlpha = .55 * (1 - (y - horizon) / 300);
+      const w = 30 + 14 * Math.sin(k * 3 + y / 9);
+      cx.fillStyle = "#ffe6a0"; cx.fillRect(mx - w / 2, y, w, 3);
+    }
+    cx.globalAlpha = 1; cx.strokeStyle = "rgba(125,143,214,.35)"; cx.lineWidth = 1.6;
+    for (let i = 0, y = horizon + 26; y < CH; i++, y += 22 + i * 3) {
+      cx.beginPath();
+      for (let x = 0; x <= CW; x += 8) cx.lineTo(x, y + Math.sin(x / 19 + k * (1.4 + i * .1) + i) * (2 + i * .3));
+      cx.stroke();
+    }
+    // background krathongs
+    d.bg.forEach((b, i) => {
+      if (!b.img) return;
+      const x = ((b.x + k * b.v) % (CW + 200)) - 100, y = horizon + 70 + i * 40 + Math.sin(k * 1.6 + i) * 2;
+      cx.globalAlpha = .85; cx.drawImage(b.img, x - 60 * b.s, y - 100 * b.s, 120 * b.s, 100 * b.s);
+    });
+    cx.globalAlpha = 1;
+    // hero krathong
+    const p = ease(k / 2.6), kx = -160 + p * (CW / 2 + 160) + Math.max(0, k - 2.6) * 10;
+    const ky = CH * .80 + Math.sin(k * 1.7) * 6, sc = 2.6;
+    g = cx.createRadialGradient(kx, ky - 150, 10, kx, ky - 150, 190);
+    g.addColorStop(0, `rgba(255,200,100,${.38 + .08 * Math.sin(k * 9)})`); g.addColorStop(1, "rgba(255,200,100,0)");
+    cx.fillStyle = g; cx.beginPath(); cx.arc(kx, ky - 150, 190, 0, 7); cx.fill();
+    g = cx.createRadialGradient(kx, ky + 10, 10, kx, ky + 10, 200);
+    g.addColorStop(0, "rgba(255,210,120,.3)"); g.addColorStop(1, "rgba(255,210,120,0)");
+    cx.fillStyle = g; cx.save(); cx.scale(1, .2); cx.beginPath(); cx.arc(kx, (ky + 10) / .2, 200, 0, 7); cx.fill(); cx.restore();
+    if (d.img) { cx.save(); cx.translate(kx, ky); cx.rotate(Math.sin(k * 1.4) * .04); cx.drawImage(d.img, -60 * sc, -100 * sc, 120 * sc, 100 * sc); cx.restore(); }
+    // name tag
+    cx.textAlign = "center"; cx.textBaseline = "middle";
+    cx.font = '500 34px "Mitr", sans-serif';
+    const nw = cx.measureText(d.name).width + 44, ny = ky - 100 * sc - 34;
+    cx.globalAlpha = ease((k - 1) / .8);
+    cx.fillStyle = "rgba(10,16,50,.75)"; cx.strokeStyle = "rgba(255,210,122,.7)"; cx.lineWidth = 2;
+    cx.beginPath(); cx.roundRect(kx - nw / 2, ny - 26, nw, 52, 26); cx.fill(); cx.stroke();
+    cx.fillStyle = "#ffd27a"; cx.fillText(d.name, kx, ny + 1);
+    // title
+    cx.globalAlpha = ease(k / .8);
+    cx.shadowColor = "rgba(255,190,90,.6)"; cx.shadowBlur = 24;
+    cx.font = '700 76px "Charm", serif'; cx.fillStyle = "#ffd27a"; cx.fillText("ลอยกระทง", CW / 2, 120);
+    cx.shadowBlur = 0;
+    cx.font = '400 28px "Mitr", sans-serif'; cx.fillStyle = "#b9bfdc"; cx.fillText("กระทงรักษ์โลก · ไม่มีขยะสักชิ้น 🌱", CW / 2, 188);
+    // wish
+    if (d.wish) {
+      cx.globalAlpha = ease((k - 2.4) / 1.2);
+      cx.font = '700 54px "Charm", serif';
+      const lines = wrapLines(d.wish, CW - 120), lh = 70, y0 = 560 - (lines.length - 1) * lh / 2;
+      cx.shadowColor = "rgba(0,0,0,.6)"; cx.shadowBlur = 12; cx.fillStyle = "#fff6dc";
+      lines.forEach((l, i) => cx.fillText(l, CW / 2, y0 + i * lh));
+      cx.shadowBlur = 0;
+    }
+    // footer
+    cx.globalAlpha = .85; cx.font = '400 26px "Mitr", sans-serif'; cx.fillStyle = "#cfd4f0";
+    cx.fillText("ลอยกระทงของคุณได้ที่ " + SITE, CW / 2, CH - 50);
+    // fade in/out
+    const fade = Math.max(1 - k / .5, (k * 1000 - (DUR - 500)) / 500, 0);
+    if (fade > 0) { cx.globalAlpha = Math.min(1, fade); cx.fillStyle = "#000"; cx.fillRect(0, 0, CW, CH); }
+    cx.globalAlpha = 1;
+  }
+
+  let clipBlob = null, clipExt = "mp4", previewRaf = 0, busy = false;
+  async function clipData() {
+    try { await document.fonts.ready; await Promise.all(['700 76px "Charm"', '500 34px "Mitr"', '400 26px "Mitr"'].map(f => document.fonts.load(f, "กข"))); } catch (e) {}
+    const types = ids.filter(t => t !== lastEntry.type);
+    const bgImgs = await Promise.all(types.map(ktImage));
+    return {
+      name: lastEntry.name, wish: document.getElementById("clipWish").checked ? lastEntry.wish : "",
+      img: await ktImage(lastEntry.type),
+      bg: bgImgs.map((img, i) => ({img, x: 120 + i * 260, v: 18 + i * 6, s: .55 + i * .12}))
+    };
+  }
+  async function preview() {
+    cancelAnimationFrame(previewRaf);
+    const d = await clipData(), t0 = performance.now();
+    const loop = now => { drawFrame(Math.min((now - t0) % (DUR + 800), DUR - 600), d); previewRaf = requestAnimationFrame(loop); };
+    previewRaf = requestAnimationFrame(loop);
+  }
+  function resetClip() {
+    clipBlob = null; vid.hidden = true; cv.hidden = false; vid.removeAttribute("src");
+    bShare.hidden = bSave.hidden = true; bMake.hidden = false; bMake.disabled = false;
+    cStatus.textContent = "คลิปแนวตั้งยาว 7 วินาที เหมาะกับสตอรี่ / TikTok / Reels";
+  }
+  document.getElementById("clipBtn").onclick = () => { if (!lastEntry) return; resetClip(); clip.classList.add("open"); preview(); };
+  document.getElementById("clipX").onclick = () => { clip.classList.remove("open"); cancelAnimationFrame(previewRaf); };
+  document.getElementById("clipWish").onchange = () => { if (!busy) { resetClip(); preview(); } };
+
+  bMake.onclick = async () => {
+    if (busy) return;
+    const canRec = typeof MediaRecorder !== "undefined" && cv.captureStream;
+    const mime = canRec ? ["video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9", "video/webm"].find(m => MediaRecorder.isTypeSupported(m)) : null;
+    cancelAnimationFrame(previewRaf);
+    const d = await clipData();
+    if (!mime) { // no video recording on this browser → still image
+      drawFrame(DUR - 900, d);
+      cv.toBlob(b => { clipBlob = b; clipExt = "png"; cStatus.textContent = "เบราว์เซอร์นี้ทำวิดีโอไม่ได้ เลยทำเป็นรูปให้แทน"; bMake.hidden = true; bShare.hidden = bSave.hidden = false; }, "image/png");
+      return;
+    }
+    busy = true; bMake.disabled = true;
+    const stream = cv.captureStream(30), chunks = [];
+    const rec = new MediaRecorder(stream, {mimeType: mime, videoBitsPerSecond: 5000000});
+    rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+    rec.onstop = () => {
+      busy = false;
+      clipExt = mime.startsWith("video/mp4") ? "mp4" : "webm";
+      clipBlob = new Blob(chunks, {type: mime.split(";")[0]});
+      vid.src = URL.createObjectURL(clipBlob); vid.hidden = false; cv.hidden = true; vid.play().catch(() => {});
+      cStatus.textContent = "คลิปพร้อมแล้ว ✨ แชร์หรือบันทึกลงเครื่องได้เลย";
+      bMake.hidden = true; bShare.hidden = bSave.hidden = false;
+    };
+    rec.start(250);
+    const t0 = performance.now();
+    const loop = now => {
+      const t = now - t0;
+      drawFrame(Math.min(t, DUR), d);
+      cStatus.textContent = `กำลังทำคลิป… ${Math.min(100, Math.round(t / DUR * 100))}%`;
+      if (t < DUR + 120) requestAnimationFrame(loop); else rec.stop();
+    };
+    requestAnimationFrame(loop);
+  };
+  const fileName = () => `loykrathong-${Date.now()}.${clipExt}`;
+  bSave.onclick = () => {
+    if (!clipBlob) return;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(clipBlob); a.download = fileName();
+    document.body.appendChild(a); a.click(); a.remove();
+    cStatus.textContent = "บันทึกแล้ว ดูในไฟล์ดาวน์โหลด / คลังรูปภาพ";
+  };
+  bShare.onclick = async () => {
+    if (!clipBlob) return;
+    const file = new File([clipBlob], fileName(), {type: clipBlob.type});
+    try {
+      if (navigator.canShare && navigator.canShare({files: [file]})) {
+        await navigator.share({files: [file], title: "ลอยกระทงออนไลน์", text: "มาลอยกระทงรักษ์โลกด้วยกัน 🪷 " + SHARE_URL});
+        return;
+      }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    bSave.onclick();
+    cStatus.textContent = "เครื่องนี้แชร์ไฟล์ตรงไม่ได้ บันทึกคลิปให้แล้ว นำไปโพสต์ได้เลย";
+  };
+
+})();
+</script>
+</body>
+</html>
