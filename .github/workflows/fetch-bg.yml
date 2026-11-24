@@ -1,0 +1,32 @@
+name: fetch-background-photos
+on:
+  push:
+    paths: [".github/workflows/fetch-bg.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download CC-licensed Wat Arun photos from Wikimedia Commons
+        run: |
+          mkdir -p assets/src
+          UA="loykrathong-site/1.0 (https://github.com/Nyx-develop/loykrathong)"
+          dl () { curl -fsSL -A "$UA" -o "assets/src/$1" "https://commons.wikimedia.org/wiki/Special:FilePath/$2?width=2400" || echo "failed $2"; }
+          dl preecha.jpg "Wat_arun_at_night_in_Bangkok,_Thailand.jpg"
+          dl fischer.jpg "Wat_Arun_At_Night_(87462663).jpeg"
+          dl singye.jpg "Wat_Arun_from_Chao_Phraya_River_at_sunset.jpg"
+          for f in "Wat_arun_at_night_in_Bangkok,_Thailand.jpg" "Wat_Arun_At_Night_(87462663).jpeg" "Wat_Arun_from_Chao_Phraya_River_at_sunset.jpg"; do
+            curl -fsSL -A "$UA" "https://commons.wikimedia.org/w/api.php?action=query&titles=File:$f&prop=imageinfo&iiprop=extmetadata|url&format=json" >> assets/src/licenses.json || true
+            echo >> assets/src/licenses.json
+          done
+          ls -la assets/src
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/src
+          git commit -m "Add source photos from Wikimedia Commons" || echo "nothing to commit"
+          git push
